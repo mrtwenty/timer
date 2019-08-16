@@ -7,14 +7,18 @@ class Daemon
     public static $daemonName = 'daemonPHP';
     public static function runAll()
     {
-        self::checkEnvCli(); //检查环境
-        self::daemonize(); //守护进程化
-        self::chdir(); //改变工作目录
-        self::closeSTD(); //关闭标准输出、标准错误
-        self::setProcessTitle(self::$daemonPHP); //设置守护进程的名字
-
+        // self::checkEnvCli(); //检查环境
+        // self::daemonize(); //守护进程化
+        // self::chdir(); //改变工作目录
+        // self::closeSTD(); //关闭标准输出、标准错误
+        // self::setProcessTitle(self::$daemonPHP); //设置守护进程的名字
+        return \timer\Timers::factory();
     }
 
+    /**
+     * 检测执行环境，必须是linux系统和cli方式执行
+     * @return [type] [description]
+     */
     protected static function checkEnvCli()
     {
         if (DIRECTORY_SEPARATOR === '\\') {
@@ -26,6 +30,10 @@ class Daemon
         }
     }
 
+    /**
+     * 设置掩码、fork两次、设置会话组长
+     * @return [type] [description]
+     */
     protected static function daemonize()
     {
         umask(0);
@@ -47,6 +55,10 @@ class Daemon
         }
     }
 
+    /**
+     * 改变工作目录
+     * @return [type] [description]
+     */
     protected static function chdir()
     {
         if (chdir('/')) {
@@ -54,6 +66,10 @@ class Daemon
         }
     }
 
+    /**
+     * 关闭标准输出、标准错误
+     * @return [type] [description]
+     */
     protected static function closeSTD()
     {
         //定义两个全局变量
@@ -76,7 +92,7 @@ class Daemon
     }
 
     /**
-     * Set process name.
+     * 设置定时器名字
      *
      * @param string $title
      * @return void

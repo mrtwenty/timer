@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
-namespace timer
+use timer\Daemon;
+
+$timer = Daemon::runAll();
 
 //测试执行 timer类
 
@@ -9,8 +11,6 @@ function microtime_float()
     list($usec, $sec) = explode(" ", microtime());
     return bcadd($usec, $sec, 3);
 }
-
-$timer = new Timer();
 
 $timer->add(0.5, Timer::EV_TIMER, function () {
     echo microtime_float() . "\n";
