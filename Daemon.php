@@ -63,7 +63,7 @@ class Daemon
      */
     protected static function chdir()
     {
-        if (chdir('/')) {
+        if (!chdir('/')) {
             throw new Exception("change dir fail", 1);
         }
     }
