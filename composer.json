@@ -1,0 +1,21 @@
+{
+    "name": "mrtwenty/timer",
+    "description": "php timer",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mrtwenty",
+            "email": "mrtwenty@foxmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+		 "php": ">=5.3"
+	},
+	"autoload": {
+        "psr-4": {
+            "timer\\": "./"
+        }
+    }
+}
