@@ -6,14 +6,14 @@ use timer\Timer;
 class Daemon
 {
     public static $stdoutFile = '/dev/null';
-    public static $daemonName = 'daemonPHP';
+    public static $daemonName = 'daemon php';
     public static function runAll()
     {
         self::checkEnvCli(); //检查环境
         self::daemonize(); //守护进程化
         self::chdir(); //改变工作目录
         self::closeSTD(); //关闭标准输出、标准错误
-        self::setProcessTitle(self::$daemonPHP); //设置守护进程的名字
+        self::setProcessTitle(self::$daemonName); //设置守护进程的名字
         return Timer::factory();
     }
 

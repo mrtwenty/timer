@@ -13,11 +13,11 @@ function microtime_float()
 }
 
 $timer->add(0.5, function ($i) {
-    echo microtime_float() . "\n";
+    file_put_contents("/tmp/test.txt", microtime_float() . "\n");
 });
 
 $timer->add(1, function () {
-    echo microtime_float() . "once \n";
+    file_put_contents("/tmp/test.txt", microtime_float() . "once \n");
 }, false);
 
 $timer->loop();
