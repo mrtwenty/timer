@@ -7,32 +7,20 @@ class Event implements LibInterface
      * Event base.
      * @var object
      */
-    protected $_eventBase = null;
-
-    /**
-     * All listeners for read/write event.
-     * @var array
-     */
-    protected $_allEvents = array();
-
-    /**
-     * Event listeners of signal.
-     * @var array
-     */
-    protected $_eventSignal = array();
+    protected $eventBase = null;
 
     /**
      * All timer event listeners.
      * [func, args, event, flag, time_interval]
      * @var array
      */
-    protected $_eventTimer = array();
+    protected $eventTimer = array();
 
     /**
      * Timer id.
      * @var int
      */
-    protected static $_timerId = 1;
+    protected static $timerId = 1;
 
     /**
      * construct
@@ -47,37 +35,36 @@ class Event implements LibInterface
         } else {
             $class_name = '\EventBase';
         }
-        $this->_eventBase = new $class_name();
+        $this->eventBase = new $class_name();
     }
 
     /**
      * @see EventInterface::add()
      */
-    public function add($fd, $flag, $func, $args = array())
+    public function add($fd, $func, $flag = true, $args = array())
     {
+        $flag = $flag === true ? self::EV_TIMER : self::EV_TIMER_ONCE;
+
         if (class_exists('\\\\Event', false)) {
             $class_name = '\\\\Event';
         } else {
             $class_name = '\Event';
         }
 
-        $param = array($func, (array) $args, $flag, $fd, self::$_timerId);
-        $event = new $class_name($this->_eventBase, -1, $class_name::TIMEOUT | $class_name::PERSIST, array($this, "timerCallback"), $param);
+        $param = array($func, (array) $args, $flag, $fd, self::$timerId);
+        $event = new $class_name($this->eventBase, -1, $class_name::TIMEOUT | $class_name::PERSIST, array($this, "timerCallback"), $param);
         if (!$event || !$event->addTimer($fd)) {
             return false;
         }
-        $this->_eventTimer[self::$_timerId] = $event;
-        return self::$_timerId++;
+        $this->eventTimer[self::$timerId] = $event;
+        return self::$timerId++;
     }
 
-    /**
-     * @see Events\EventInterface::del()
-     */
-    public function del($fd, $flag)
+    public function del($fd)
     {
-        if (isset($this->_eventTimer[$fd])) {
-            $this->_eventTimer[$fd]->del();
-            unset($this->_eventTimer[$fd]);
+        if (isset($this->eventTimer[$fd])) {
+            $this->eventTimer[$fd]->del();
+            unset($this->eventTimer[$fd]);
         }
         return true;
     }
@@ -93,8 +80,8 @@ class Event implements LibInterface
         $timer_id = $param[4];
 
         if ($param[2] === self::EV_TIMER_ONCE) {
-            $this->_eventTimer[$timer_id]->del();
-            unset($this->_eventTimer[$timer_id]);
+            $this->eventTimer[$timer_id]->del();
+            unset($this->eventTimer[$timer_id]);
         }
 
         try {
@@ -112,10 +99,10 @@ class Event implements LibInterface
      */
     public function clearAllTimer()
     {
-        foreach ($this->_eventTimer as $event) {
+        foreach ($this->eventTimer as $event) {
             $event->del();
         }
-        $this->_eventTimer = array();
+        $this->eventTimer = array();
     }
 
     /**
@@ -123,7 +110,7 @@ class Event implements LibInterface
      */
     public function loop()
     {
-        $this->_eventBase->loop();
+        $this->eventBase->loop();
     }
 
     /**
@@ -133,6 +120,6 @@ class Event implements LibInterface
      */
     public function getTimerCount()
     {
-        return count($this->_eventTimer);
+        return count($this->eventTimer);
     }
 }

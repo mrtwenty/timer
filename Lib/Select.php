@@ -23,8 +23,9 @@ class Select implements LibInterface
         $this->scheduler->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
     }
 
-    public function add($fd, $flag, $func, $args = array())
+    public function add($fd, $func, $flag = true, $args = array())
     {
+        $flag = $flag === true ? self::EV_TIMER : self::EV_TIMER_ONCE;
 
         $timer_id = $this->timerId++;
         $run_time = microtime(true) + $fd;
@@ -96,7 +97,7 @@ class Select implements LibInterface
     /**
      * {@inheritdoc}
      */
-    public function del($fd, $flag)
+    public function del($fd)
     {
         $fd_key = (int) $fd;
         unset($this->eventTimer[$fd_key]);
@@ -114,21 +115,3 @@ class Select implements LibInterface
     }
 
 }
-
-function microtime_float()
-{
-    list($usec, $sec) = explode(" ", microtime());
-    return bcadd($usec, $sec, 3);
-}
-
-$timer = new Timer();
-
-$timer->add(1, Timer::EV_TIMER, function () {
-    echo microtime_float() . "\n";
-});
-
-$timer->add(1, Timer::EV_TIMER_ONCE, function () {
-    echo microtime_float() . "once \n";
-});
-
-$timer->loop();

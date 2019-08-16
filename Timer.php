@@ -1,8 +1,8 @@
 <?php
 namespace timer;
 
-use timer\lib\Event;
-use timer\lib\Select;
+use timer\Lib\Event;
+use timer\Lib\Select;
 
 class Timer
 {

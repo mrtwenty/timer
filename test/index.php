@@ -12,22 +12,12 @@ function microtime_float()
     return bcadd($usec, $sec, 3);
 }
 
-$timer->add(0.5, Timer::EV_TIMER, function () {
+$timer->add(0.5, function ($i) {
     echo microtime_float() . "\n";
 });
 
-$timer->add(1, Timer::EV_TIMER_ONCE, function () {
+$timer->add(1, function () {
     echo microtime_float() . "once \n";
-});
-
-//待删除的id
-$id = $timer->add(5, Timer::EV_TIMER, function () {
-    echo "clean up after running once\n";
-});
-
-//删除定时器
-$timer->add(6, Timer::EV_TIMER_ONCE, function () use ($id, $timer) {
-    $timer->del($id, Timer::EV_TIMER);
-});
+}, false);
 
 $timer->loop();
