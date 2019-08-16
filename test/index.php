@@ -12,12 +12,12 @@ function microtime_float()
     return bcadd($usec, $sec, 3);
 }
 
-$timer->add(0.5, function ($i) {
-    file_put_contents("/tmp/test.txt", microtime_float() . "\n");
+$timer->add(0.5, function () {
+    file_put_contents("/tmp/test.txt", microtime_float() . "\n", FILE_APPEND);
 });
 
 $timer->add(1, function () {
-    file_put_contents("/tmp/test.txt", microtime_float() . "once \n");
+    file_put_contents("/tmp/test.txt", microtime_float() . "once \n", FILE_APPEND);
 }, false);
 
 $timer->loop();
