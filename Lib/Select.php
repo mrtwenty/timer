@@ -1,5 +1,5 @@
 <?php
-namespace time\lib;
+namespace timer\Lib;
 
 class Select implements LibInterface
 {

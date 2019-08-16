@@ -1,5 +1,5 @@
 <?php
-namespace timer\lib;
+namespace timer\Lib;
 
 class Event implements LibInterface
 {
