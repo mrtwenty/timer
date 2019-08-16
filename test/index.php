@@ -13,11 +13,21 @@ function microtime_float()
 }
 
 $timer->add(0.5, function () {
-    file_put_contents("/tmp/test.txt", microtime_float() . "\n", FILE_APPEND);
+
+    if (Daemon::getOS() === OS_TYPE_WIN) {
+        echo microtime_float() . "\n";
+    } else {
+        file_put_contents("/tmp/test.txt", microtime_float() . "\n", FILE_APPEND);
+    }
 });
 
 $timer->add(1, function () {
-    file_put_contents("/tmp/test.txt", microtime_float() . "once \n", FILE_APPEND);
+
+    if (Daemon::getOS() === OS_TYPE_WIN) {
+        echo microtime_float() . "once \n";
+    } else {
+        file_put_contents("/tmp/test.txt", microtime_float() . "once \n", FILE_APPEND);
+    }
 }, false);
 
 $timer->loop();

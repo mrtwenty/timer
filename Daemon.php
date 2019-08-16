@@ -1,15 +1,24 @@
 <?php
 namespace timer;
 
+require __DIR__ . '/init.php';
+
 use timer\Timer;
 
 class Daemon
 {
     public static $stdoutFile = '/dev/null';
     public static $daemonName = 'daemon php';
+    protected static $OS      = OS_TYPE_LIN;
+
     public static function runAll()
     {
         self::checkEnvCli(); //检查环境
+
+        //如果是win
+        if (static::$OS !== OS_TYPE_LIN) {
+            return Timer::factory();
+        }
         self::daemonize(); //守护进程化
         self::chdir(); //改变工作目录
         self::closeSTD(); //关闭标准输出、标准错误
@@ -24,7 +33,7 @@ class Daemon
     protected static function checkEnvCli()
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            exit("must be Linux\n");
+            self::$OS = OS_TYPE_WIN;
         }
 
         if (php_sapi_name() != "cli") {
@@ -112,4 +121,12 @@ class Daemon
         restore_error_handler();
     }
 
+    /**
+     * 返回当前执行环境
+     * @return [type] [description]
+     */
+    public static function getOS()
+    {
+        return self::$OS;
+    }
 }
